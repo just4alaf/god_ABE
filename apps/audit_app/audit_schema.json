@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "god-abe/audit-report.schema.json",
+  "title": "ABE Audit Report",
+  "description": "Deterministic PASS/FAIL audit report produced by the Audit / Compliance App after verifying GOD provenance and artifacts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "audit_id",
+    "generated_at",
+    "result",
+    "checks",
+    "summary"
+  ],
+  "properties": {
+    "audit_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique identifier for this audit run."
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC timestamp when the audit report was generated."
+    },
+    "result": {
+      "type": "string",
+      "enum": ["PASS", "FAIL"],
+      "description": "Overall audit outcome."
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable summary of the audit outcome."
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Individual audit checks and their outcomes.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "status", "message"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Name of the audit check."
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PASS", "FAIL"],
+            "description": "Result of this check."
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Explanation of the check result."
+          }
+        }
+      }
+    }
+  }
+}
