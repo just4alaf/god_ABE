@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "god-abe/run-log.schema.json",
+  "title": "ABE Run Ledger",
+  "description": "Append-only ledger of Authority-Bound Executor runs. Records verification status and artifact linkage only.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["runs"],
+  "properties": {
+    "runs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "run_id",
+          "started_at",
+          "status",
+          "god_provenance_ref",
+          "artifacts"
+        ],
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["verified", "rejected", "aborted"]
+          },
+          "god_provenance_ref": {
+            "type": "string",
+            "description": "Path or hash reference to GOD provenance.json consumed by this run."
+          },
+          "artifacts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["path", "sha256"],
+              "properties": {
+                "path": { "type": "string" },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
