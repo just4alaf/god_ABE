@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "god-engine/provenance.schema.json",
+  "title": "GOD Engine Provenance Artifact",
+  "description": "Machine-verifiable provenance record binding a single GOD Engine run to its inputs, rules, outputs, and determinism guarantees.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_identity",
+    "engine_identity",
+    "input_integrity",
+    "output_integrity",
+    "determinism_declaration"
+  ],
+  "properties": {
+    "run_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["run_id", "execution_timestamp"],
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unique identifier for the execution run."
+        },
+        "execution_timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC timestamp when execution occurred."
+        }
+      }
+    },
+    "engine_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "engine_name",
+        "engine_version",
+        "opcode_registry_hash",
+        "workflow_schema_hash"
+      ],
+      "properties": {
+        "engine_name": {
+          "type": "string",
+          "const": "GOD Engine"
+        },
+        "engine_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "opcode_registry_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 hash of opcode_registry."
+        },
+        "workflow_schema_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 hash of workflow.schema.json."
+        }
+      }
+    },
+    "input_integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["intake_hash", "workflow_hash"],
+      "properties": {
+        "intake_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 hash of the intake artifact."
+        },
+        "workflow_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 hash of workflow.json."
+        }
+      }
+    },
+    "output_integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_output_hash",
+        "report_json_hash",
+        "report_md_hash"
+      ],
+      "properties": {
+        "execution_output_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 hash of execution_output.json."
+        },
+        "report_json_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 hash of report.json."
+        },
+        "report_md_hash": {
+          "type": ["string", "null"],
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 hash of report.md if generated, otherwise null."
+        }
+      }
+    },
+    "determinism_declaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["deterministic", "external_calls", "side_effects"],
+      "properties": {
+        "deterministic": { "type": "boolean", "const": true },
+        "external_calls": { "type": "boolean", "const": false },
+        "side_effects": { "type": "boolean", "const": false }
+      }
+    }
+  }
+}
